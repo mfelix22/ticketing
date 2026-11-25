@@ -135,5 +135,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('priorities', [PriorityController::class, 'index'])->name('priorities.index');
 });
 require __DIR__ . '/auth.php';
-require __DIR__ . '/test.php';
-require __DIR__ . '/test-additional.php';
