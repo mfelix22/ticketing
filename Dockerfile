@@ -15,7 +15,7 @@ COPY public/ ./public/
 RUN npm run build
 
 # ─── Stage 2: PHP + Apache ────────────────────────────────────────────────────
-FROM php:8.2-apache
+FROM php:8.3-apache
 
 # Enable Apache modules required by Laravel
 RUN a2enmod rewrite headers
