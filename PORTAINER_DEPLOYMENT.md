@@ -56,7 +56,17 @@ docker exec -i ticketing_db mysql -u root -p<root_pw> ticketing < ticketing.sql
 Alternatively set `DB_HOST` etc. in the stack env to the external server and
 remove the `mysql`/`phpmyadmin` services.
 
-## 4. Auto-redeploy on push
+## 4. GHCR package access
+
+The workflow publishes to `ghcr.io/mfelix22/ticketing`. If the stack fails with
+`pull access denied`, either:
+
+- make the package public: GitHub → your profile → **Packages** → `ticketing` →
+  **Package settings** → **Change visibility** → Public, or
+- add a GHCR registry credential in Portainer (**Registries** → `ghcr.io` with a
+  PAT that has `read:packages`), same as the other stacks.
+
+## 5. Auto-redeploy on push
 
 1. In Portainer, open the `ticketing` stack → **Webhooks** → create a webhook, copy the URL.
 2. In GitHub repo → **Settings → Secrets and variables → Actions → Variables** →
@@ -65,7 +75,7 @@ remove the `mysql`/`phpmyadmin` services.
 Every push to `main` will then rebuild the image and restart the stack with the
 new image automatically.
 
-## 5. Useful commands (Portainer console on `ticketing_app`)
+## 6. Useful commands (Portainer console on `ticketing_app`)
 
 ```bash
 php artisan tinker          # create users, inspect data
