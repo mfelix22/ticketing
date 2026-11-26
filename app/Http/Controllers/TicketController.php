@@ -85,7 +85,7 @@ class TicketController extends Controller
             $departmentUsers = \App\Models\User::where('department_id', $ticket->department_id)
                 ->where(function ($q) {
                     $q->whereIn('status', ['Approver', 'Both'])
-                      ->orWhere('is_pic', 1);
+                        ->orWhere('is_pic', 1);
                 })
                 ->get();
 
@@ -407,7 +407,7 @@ class TicketController extends Controller
             ->where(function ($query) use ($validated) {
                 $detail = $validated['detail_request'] ?? [];
                 $query->where('detail_request', json_encode($detail))
-                      ->orWhere('detail_request', json_encode((object) $detail));
+                    ->orWhere('detail_request', json_encode((object) $detail));
             })
             ->latest()
             ->first();
