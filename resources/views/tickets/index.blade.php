@@ -369,24 +369,10 @@
             // Store ticket ID in form data attribute for later use
             form.dataset.ticketId = ticketId;
 
-            // Build the correct URL with subdirectory
-            const currentUrl = window.location.href;
-            const pathArray = currentUrl.split('/');
-            let baseUrl = '';
+            // Base URL aware of subdirectory deployments (e.g., /ticketing)
+            const APP_BASE_URL = "{{ rtrim(url('/'), '/') }}";
 
-            // Find 'ticketing' or 'tickets' in path and build base accordingly
-            for (let i = 0; i < pathArray.length; i++) {
-                if (pathArray[i] === 'ticketing' || pathArray[i] === 'tickets') {
-                    baseUrl = pathArray.slice(0, i).join('/') + '/' + pathArray[i] + '/';
-                    break;
-                }
-            }
-
-            if (!baseUrl) {
-                baseUrl = '/ticketing/';
-            }
-
-            form.action = baseUrl + 'tickets/' + ticketId + '/cancel';
+            form.action = APP_BASE_URL + '/tickets/' + ticketId + '/cancel';
 
             // Clear previous input
             textarea.value = '';

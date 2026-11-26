@@ -29,7 +29,8 @@
     RewriteCond %{REQUEST_URI} ^/ticketing/js/ [OR]
     RewriteCond %{REQUEST_URI} ^/ticketing/images/ [OR]
     RewriteCond %{REQUEST_URI} ^/ticketing/fonts/ [OR]
-    RewriteCond %{REQUEST_URI} ^/ticketing/storage/
+    RewriteCond %{REQUEST_URI} ^/ticketing/storage/ [OR]
+    RewriteCond %{REQUEST_URI} ^/storage/
     RewriteRule ^(.*)$ public/$1 [L,QSA]
 
     # Send Requests To Front Controller...

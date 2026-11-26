@@ -5,9 +5,9 @@ on every push to `main`. The Portainer stack pulls that image.
 
 ## How it works
 
-- `Dockerfile` builds the app under `/var/www/html/ticketing` with Apache document
-  root at `/var/www/html`, so the app is reachable at `http://<host>:6100/ticketing`
-  — the same subpath layout as `https://sdp.hartonomotor-group.com/ticketing`.
+- `Dockerfile` builds the app at Apache's document root (`/var/www/html`), so the
+  app is reachable at `http://<host>:6100/` — served at the root of
+  `https://sdp-ticketing.hartonomotor-group.com`.
 - `entrypoint.sh` waits for MySQL, runs `php artisan migrate --force` and
   `php artisan storage:link`, then starts Apache.
 - `.github/workflows/docker.yml` builds and pushes the image, then (optionally)
@@ -22,7 +22,7 @@ on every push to `main`. The Portainer stack pulls that image.
 | Variable | Example | Notes |
 |---|---|---|
 | `APP_KEY` | `base64:...` | Copy from the existing `.env`, or generate with `php artisan key:generate --show` |
-| `APP_URL` | `https://sdp.hartonomotor-group.com/ticketing` | Default already set in compose |
+| `APP_URL` | `https://sdp-ticketing.hartonomotor-group.com` | Default already set in compose |
 | `ASSET_URL` | same as `APP_URL` | Default already set in compose |
 | `DB_DATABASE` | `ticketing` | Default `ticketing` |
 | `DB_USERNAME` | `laravel` | Default `laravel` |
@@ -34,11 +34,20 @@ on every push to `main`. The Portainer stack pulls that image.
 
 4. **Deploy the stack.**
 
-## 2. Reverse proxy
+## 2. Cloudflare Tunnel
 
-Point `sdp.hartonomotor-group.com/ticketing` → `http://<docker-host>:6100`
-**preserving the URI path** (the app expects requests to arrive with the
-`/ticketing` prefix, just like the current `/var/www/html/ticketing` deployment).
+Point `sdp-ticketing.hartonomotor-group.com` at the app container via your
+cloudflared ingress config:
+
+```yaml
+ingress:
+  - hostname: sdp-ticketing.hartonomotor-group.com
+    service: http://10.101.24.67:6100
+  - service: http_status:404   # catch-all
+```
+
+No path rules needed — the app serves at the domain root. Cloudflare sends
+`X-Forwarded-Proto: https`, which the app already uses to force HTTPS URLs.
 
 ## 3. Migrating existing data
 
